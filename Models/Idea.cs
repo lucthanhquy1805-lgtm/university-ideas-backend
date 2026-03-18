@@ -24,6 +24,8 @@ public partial class Idea
     public DateTime? CreatedAt { get; set; }
 
     public virtual AcademicYear AcademicYear { get; set; } = null!;
+    public int? TopicId { get; set; }
+    public virtual Topic? Topic { get; set; }
 
     public virtual Category Category { get; set; } = null!;
 
@@ -32,6 +34,7 @@ public partial class Idea
     public virtual ICollection<Document> Documents { get; set; } = new List<Document>();
 
     public virtual ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
+
 
     public virtual User User { get; set; } = null!;
 }

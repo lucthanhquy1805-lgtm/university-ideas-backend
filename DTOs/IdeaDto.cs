@@ -12,6 +12,7 @@
 
         // --- Phân loại ---
         public string CategoryName { get; set; } = null!; // Ví dụ: Technology
+        public string? TopicName { get; set; }
 
         // --- Chỉ số tương tác (Giống hàng icon dưới cùng của mỗi Idea trên Figma) ---
         public int ViewCount { get; set; }
