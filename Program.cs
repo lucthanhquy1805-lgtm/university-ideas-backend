@@ -16,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
-
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
 var app = builder.Build();
 
 
