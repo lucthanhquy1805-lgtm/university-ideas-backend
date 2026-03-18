@@ -15,6 +15,9 @@ public partial class Idea
 
     public int CategoryId { get; set; }
 
+    public int? TopicId { get; set; } // Khóa ngoại trỏ tới Topic (Cho phép null nếu có ý tưởng không thuộc Topic nào)
+    public virtual Topic? Topic { get; set; } // Navigation property
+
     public int AcademicYearId { get; set; }
 
     public bool? IsAnonymous { get; set; }

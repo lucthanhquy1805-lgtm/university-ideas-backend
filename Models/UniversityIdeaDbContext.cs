@@ -19,6 +19,8 @@ public partial class UniversityIdeaDbContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Topic> Topics { get; set; } = null!;
+
     public virtual DbSet<Comment> Comments { get; set; }
 
     public virtual DbSet<Department> Departments { get; set; }
