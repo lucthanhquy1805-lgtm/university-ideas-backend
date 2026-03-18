@@ -164,20 +164,10 @@ public partial class UniversityIdeaDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users_Departments");
 
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserRole",
-                    r => r.HasOne<Role>().WithMany()
-                        .HasForeignKey("RoleId")
-                        .HasConstraintName("FK_UserRoles_Roles"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_UserRoles_Users"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "RoleId").HasName("PK__UserRole__AF2760AD46C74D6D");
-                        j.ToTable("UserRoles");
-                    });
+            entity.HasOne(d => d.Role)
+                  .WithMany(p => p.Users)
+                  .HasForeignKey(d => d.RoleId)
+                  .HasConstraintName("FK_Users_Roles");
         });
 
         OnModelCreatingPartial(modelBuilder);
