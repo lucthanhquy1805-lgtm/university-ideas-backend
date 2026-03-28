@@ -1,16 +1,16 @@
 ﻿namespace UniversityIdeas.API.DTOs
 {
-    // Đại diện cho 1 dòng trong bảng Figma
+    // Đại diện cho 1 dòng
     public class CategoryItemDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public int IdeaCount { get; set; } // Hiển thị số 45, 38...
-        public string Status { get; set; } = null!; // Hiển thị "Active" hoặc "Inactive"
+        public int IdeaCount { get; set; } 
+        public string Status { get; set; } = null!; 
     }
 
-    // Đại diện cho toàn bộ trang Categories
+    // trang Categories
     public class CategoryPageDto
     {
         // 3 Thẻ ở trên cùng

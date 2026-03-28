@@ -13,6 +13,17 @@ builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddControllers();
 
+// Đăng ký CORS cho phép React App truy cập
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // Địa chỉ Mặt tiền của bạn
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -30,6 +41,8 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
+
+
 
 
 if (app.Environment.IsDevelopment())

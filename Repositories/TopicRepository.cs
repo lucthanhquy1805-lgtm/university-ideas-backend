@@ -16,10 +16,12 @@ namespace UniversityIdeas.API.Repositories
         public async Task<TopicPageDto> GetTopicPageDataAsync()
         {
             var result = new TopicPageDto();
-
+            //3 thẻ 
             result.TotalTopics = await _context.Topics.CountAsync();
             result.ActiveTopics = await _context.Topics.CountAsync(t => t.IsActive);
-            result.TotalIdeas = await _context.Ideas.CountAsync();
+            result.TotalIdeas = await _context.Ideas.CountAsync(); 
+
+            // Lấy danh sách 
             var topics = await _context.Topics
                 .Include(t => t.Category) 
                 .Select(t => new TopicItemDto
