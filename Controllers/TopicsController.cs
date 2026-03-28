@@ -14,7 +14,7 @@ namespace UniversityIdeas.API.Controllers
             _topicRepository = topicRepository;
         }
 
-        // GET: api/Topics/page-data
+
         [HttpGet("page-data")]
         public async Task<IActionResult> GetPageData()
         {

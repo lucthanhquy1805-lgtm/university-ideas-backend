@@ -9,14 +9,13 @@
         public int DepartmentId { get; set; }
         public bool IsActive { get; set; }
 
-        // Khóa ngoại cho Role (Đã sửa)
+        // khóa ngoại
         public int? RoleId { get; set; }
 
-        // --- Các Navigation Properties ---
+        // navigation properties
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public virtual Department Department { get; set; } = null!;
 
-        // Chỉ có 1 Role thay vì ICollection (Đã sửa)
         public virtual Role? Role { get; set; }
 
         public virtual ICollection<Idea> Ideas { get; set; } = new List<Idea>();
