@@ -17,19 +17,19 @@ namespace UniversityIdeas.API.Repositories
         {
             var result = new CategoryPageDto();
 
-            // 1. Lấy dữ liệu cho 3 thẻ thống kê trên cùng
+          
             result.TotalCategories = await _context.Categories.CountAsync();
             result.ActiveCategories = await _context.Categories.CountAsync(c => c.IsActive);
-            result.TotalIdeas = await _context.Ideas.CountAsync(); // Đếm tổng tất cả Idea
+            result.TotalIdeas = await _context.Ideas.CountAsync(); 
 
-            // 2. Lấy danh sách cho bảng, kèm theo việc tự động đếm IdeaCount
+            
             var categories = await _context.Categories
                 .Select(c => new CategoryItemDto
                 {
                     Id = c.Id,
                     Name = c.Name,
                     Description = c.Description,
-                    IdeaCount = _context.Ideas.Count(i => i.CategoryId == c.Id), // Tự động đếm ý tưởng theo ID
+                    IdeaCount = _context.Ideas.Count(i => i.CategoryId == c.Id), 
                     Status = c.IsActive ? "Active" : "Inactive"
                 })
                 .ToListAsync();
