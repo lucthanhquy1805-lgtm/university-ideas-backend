@@ -39,4 +39,5 @@ public partial class Idea
 
 
     public virtual User User { get; set; } = null!;
+    public string? FilePath { get; set; }
 }
