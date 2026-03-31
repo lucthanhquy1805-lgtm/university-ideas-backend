@@ -18,8 +18,8 @@ namespace UniversityIdeas.API.Controllers
         // Tạo 1 cái DTO nhỏ để hứng Email và Password từ form React gửi lên
         public class LoginDto
         {
-            public string Email { get; set; }
-            public string Password { get; set; }
+            public string? Email { get; set; }
+            public string? Password { get; set; }
         }
 
         [HttpPost("login")]
@@ -46,6 +46,57 @@ namespace UniversityIdeas.API.Controllers
                     departmentId = user.DepartmentId,
                     roleId = user.RoleId // Cột này siêu quan trọng để biết ai là Admin!
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Lỗi server: " + ex.Message);
+            }
+        }
+        // =========================================================
+        // 1. DTO hứng dữ liệu đăng ký từ form React gửi lên
+        // =========================================================
+        public class RegisterDto
+        {
+            public string? FullName { get; set; }
+            public string? Email { get; set; }
+            public string? Password { get; set; }
+            public int DepartmentId { get; set; }
+        }
+
+        // =========================================================
+        // 2. API Xử lý Đăng ký
+        // =========================================================
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+        {
+            try
+            {
+                // Bước A: Kiểm tra xem Email này đã có ai dùng để đăng ký chưa
+                var emailExists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
+                if (emailExists)
+                {
+                    return BadRequest("Email này đã được sử dụng trong hệ thống!");
+                }
+
+                // Bước B: Tạo tài khoản mới
+                var newUser = new User
+                {
+                    FullName = dto.FullName,
+                    Email = dto.Email,
+                    PasswordHash = dto.Password, // Ở đồ án ta lưu thẳng mật khẩu
+                    DepartmentId = dto.DepartmentId,
+
+                    // 🔥 QUAN TRỌNG: TỰ ĐỘNG GẮN QUYỀN STAFF (4) CHO NGƯỜI MỚI ĐĂNG KÝ
+                    RoleId = 4,
+
+                    IsActive = true
+                };
+
+                // Bước C: Lưu vào Database
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Đăng ký tài khoản thành công!" });
             }
             catch (Exception ex)
             {
