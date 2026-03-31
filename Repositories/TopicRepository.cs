@@ -39,5 +39,27 @@ namespace UniversityIdeas.API.Repositories
 
             return result;
         }
+
+        public async Task CreateTopicAsync(Topic topic)
+        {
+            _context.Topics.Add(topic);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateTopicAsync(Topic topic)
+        {
+            _context.Topics.Update(topic);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteTopicAsync(int id)
+        {
+            var topic = await _context.Topics.FindAsync(id);
+            if (topic != null)
+            {
+                _context.Topics.Remove(topic);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

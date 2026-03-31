@@ -38,9 +38,10 @@ namespace UniversityIdeas.API.Repositories
 
             return result;
         }
+        //add
         public async Task AddCategoryAsync(Category category)
         {
-            // Lệnh này tùy thuộc vào tên biến Database của bạn (thường là _context hoặc _dbContext)
+            
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
         }
@@ -48,10 +49,10 @@ namespace UniversityIdeas.API.Repositories
         //delete
         public async Task DeleteCategoryAsync(int id)
         {
-            // 1. Tìm xem cái hàng đó có tồn tại trong kho không
+           
             var category = await _context.Categories.FindAsync(id);
 
-            // 2. Nếu tìm thấy thì đem vứt đi và lưu lại
+            
             if (category != null)
             {
                 _context.Categories.Remove(category);
@@ -62,7 +63,7 @@ namespace UniversityIdeas.API.Repositories
         //Update
         public async Task UpdateCategoryAsync(Category category)
         {
-            // Cập nhật thông tin mới vào Database
+            
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
         }

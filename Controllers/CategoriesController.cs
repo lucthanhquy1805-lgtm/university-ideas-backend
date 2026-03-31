@@ -26,52 +26,51 @@ namespace UniversityIdeas.API.Controllers
 
         //Create
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] Category newCategory) // Sửa thành Category
+        public async Task<IActionResult> CreateCategory([FromBody] Category newCategory) 
         {
             try
             {
-                // Xóa chữ GetCategoryPageDataAsync đi, gõ dấu chấm (.) để tìm hàm Add
                 await _categoryRepository.AddCategoryAsync(newCategory);// 
 
-                return Ok(new { message = "Thêm danh mục thành công!" });
+                return Ok(new { message = "Category added successfully!" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Lỗi khi thêm danh mục: " + ex.Message });
+                return BadRequest(new { message = "Error when adding a category: " + ex.Message });
             }
         }
 
         //Delete
-        [HttpDelete("{id}")] // Chú ý: Có chữ {id} ở đây để bắt được cái mã số xe tải gửi lên
+        [HttpDelete("{id}")] 
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try
             {
                 await _categoryRepository.DeleteCategoryAsync(id);
-                return Ok(new { message = "Xóa danh mục thành công!" });
+                return Ok(new { message = "Category deletion successful!" });
             }
             catch (Exception ex)
             {
-                // Thường lỗi xảy ra ở đây là do: Danh mục này đang chứa Idea, SQL Server không cho xóa để bảo toàn dữ liệu
-                return BadRequest(new { message = "Không thể xóa danh mục này: " + ex.Message });
+                
+                return BadRequest(new { message = "This category cannot be deleted: " + ex.Message });
             }
         }
 
         //Edit
-        [HttpPut("{id}")] // Bắt buộc phải có ID để biết đang sửa danh mục nào
+        [HttpPut("{id}")] 
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] Category updatedCategory)
         {
-            // Kiểm tra an ninh: ID trên thanh địa chỉ phải khớp với ID trong gói hàng
-            if (id != updatedCategory.Id) return BadRequest(new { message = "ID không khớp!" });
+            
+            if (id != updatedCategory.Id) return BadRequest(new { message = "IDs don't match!" });
 
             try
             {
                 await _categoryRepository.UpdateCategoryAsync(updatedCategory);
-                return Ok(new { message = "Cập nhật danh mục thành công!" });
+                return Ok(new { message = "Catalog update successful!" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Lỗi khi cập nhật: " + ex.Message });
+                return BadRequest(new { message = "Error during update: " + ex.Message });
             }
         }
     }
