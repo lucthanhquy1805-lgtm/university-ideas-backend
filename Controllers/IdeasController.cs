@@ -199,7 +199,7 @@ namespace UniversityIdeas.API.Controllers
                     UserId = dto.UserId,
 
                     IsAnonymous = dto.IsAnonymous,
-                    AcademicYearId = dto.AcademicYearId,
+                    AcademicYearId = 1,
                     CreatedAt = DateTime.Now,
                     ViewCount = 0
                 };
@@ -220,7 +220,7 @@ namespace UniversityIdeas.API.Controllers
 
                 _context.Ideas.Add(newIdea);
                 await _context.SaveChangesAsync();
-                return Ok(newIdea);
+                return Ok(new { message = "Thêm ý tưởng thành công!", id = newIdea.Id });
             }
             catch (Exception ex)
             {
