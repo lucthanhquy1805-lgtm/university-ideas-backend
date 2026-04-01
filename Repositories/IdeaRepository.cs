@@ -15,13 +15,16 @@ namespace UniversityIdeas.API.Repositories
 
         public async Task<IEnumerable<IdeaDto>> GetAllIdeasAsync(string? search, int? categoryId, int? topicId, int? departmentId, string? sortBy)
         {
-           
+
             var query = _context.Ideas.AsQueryable();
 
-           
+
             if (!string.IsNullOrWhiteSpace(search))
             {
-                query = query.Where(i => i.Title.Contains(search) || i.Content.Contains(search));
+                // THÊM: Bổ sung điều kiện tìm kiếm theo Tên Tác Giả (i.User.FullName)
+                query = query.Where(i => i.Title.Contains(search) ||
+                                         i.Content.Contains(search) ||
+                                         i.User.FullName.Contains(search));
             }
 
             if (categoryId.HasValue && categoryId > 0)
@@ -33,13 +36,19 @@ namespace UniversityIdeas.API.Repositories
             if (departmentId.HasValue && departmentId > 0)
                 query = query.Where(i => i.User.DepartmentId == departmentId);
 
-          
+
             var ideasQuery = query.Select(i => new IdeaDto
             {
                 Id = i.Id,
                 Title = i.Title,
                 Content = i.Content,
+
+                // Hiển thị tên Ẩn danh cho người ngoài xem
                 AuthorName = i.IsAnonymous == true ? "Anonymous" : i.User.FullName,
+
+                // THÊM: Trả về UserId gốc để Frontend React lọc được bài cho trang My Ideas
+                UserId = i.UserId,
+
                 DepartmentName = i.User.Department.Name,
                 CategoryName = i.Category.Name,
                 TopicName = i.Topic != null ? i.Topic.Name : null,
@@ -54,7 +63,7 @@ namespace UniversityIdeas.API.Repositories
             {
                 "Most Viewed" => ideasQuery.OrderByDescending(i => i.ViewCount),
                 "Most Popular" => ideasQuery.OrderByDescending(i => i.ThumbsUpCount),
-                _ => ideasQuery.OrderByDescending(i => i.CreatedAt) 
+                _ => ideasQuery.OrderByDescending(i => i.CreatedAt)
             };
 
             return await ideasQuery.ToListAsync();
