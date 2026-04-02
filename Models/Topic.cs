@@ -8,7 +8,7 @@
         public string? Description { get; set; }
         public bool IsActive { get; set; }
 
-        public virtual Category Category { get; set; } = null!;
+        public virtual Category? Category { get; set; }
 
         // 1 Topic có nhiều Ideas
         public virtual ICollection<Idea> Ideas { get; set; } = new List<Idea>();

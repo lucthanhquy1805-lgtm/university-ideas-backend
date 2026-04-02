@@ -28,6 +28,10 @@ namespace UniversityIdeas.API.Controllers
         {
             try
             {
+                newTopic.Id = 0;
+                newTopic.Category = null;
+                newTopic.Ideas = new List<Idea>();
+
                 await _topicRepository.CreateTopicAsync(newTopic);
                 return Ok(new { message = "Thêm Topic thành công!" });
             }
@@ -45,6 +49,9 @@ namespace UniversityIdeas.API.Controllers
 
             try
             {
+                updatedTopic.Category = null;
+                updatedTopic.Ideas = new List<Idea>();
+
                 await _topicRepository.UpdateTopicAsync(updatedTopic);
                 return Ok(new { message = "Cập nhật Topic thành công!" });
             }

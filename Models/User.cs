@@ -14,7 +14,7 @@
 
         // navigation properties
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-        public virtual Department Department { get; set; } = null!;
+        public virtual Department? Department { get; set; }
 
         public virtual Role? Role { get; set; }
 
