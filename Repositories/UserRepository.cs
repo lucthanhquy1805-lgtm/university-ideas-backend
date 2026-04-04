@@ -32,8 +32,8 @@ namespace UniversityIdeas.API.Repositories
                     Email = u.Email,
                     DepartmentName = u.Department.Name,
                     RoleName = u.Role != null ? u.Role.Name : "No Role",
-                    IdeaCount = _context.Ideas.Count(i => i.UserId == u.Id), 
-                    Status = u.IsActive ? "Active" : "Inactive"
+                    IdeaCount = _context.Ideas.Count(i => i.UserId == u.Id),
+                    IsActive = u.IsActive
                 })
                 .ToListAsync();
 

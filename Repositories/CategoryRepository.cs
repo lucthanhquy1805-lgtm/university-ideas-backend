@@ -29,8 +29,8 @@ namespace UniversityIdeas.API.Repositories
                     Id = c.Id,
                     Name = c.Name,
                     Description = c.Description,
-                    IdeaCount = _context.Ideas.Count(i => i.CategoryId == c.Id), 
-                    Status = c.IsActive ? "Active" : "Inactive"
+                    IdeaCount = _context.Ideas.Count(i => i.CategoryId == c.Id),
+                    IsActive = c.IsActive 
                 })
                 .ToListAsync();
 
