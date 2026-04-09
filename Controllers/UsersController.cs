@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniversityIdeas.API.Models;
 using UniversityIdeas.API.Repositories;
-
+using UniversityIdeas.API.DTOs;
 namespace UniversityIdeas.API.Controllers
 {
     [Route("api/[controller]")]
@@ -37,19 +37,18 @@ namespace UniversityIdeas.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto dto)
         {
-            if (id != updatedUser.Id)
-                return BadRequest(new { message = "IDs don't match!" });
-
             try
             {
-                await _userRepository.UpdateUserAsync(updatedUser);
-                return Ok(new { message = "User update successful!" });
+                // Đẩy thẳng xuống Repository xử lý
+                await _userRepository.UpdateUserAsync(id, dto);
+
+                return Ok(new { message = "User updated successfully!" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Error when updating User:" + ex.Message });
+                return BadRequest(new { message = "Error when updating User: " + ex.Message });
             }
         }
 
@@ -63,7 +62,17 @@ namespace UniversityIdeas.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Error when deleting User: " + ex.Message });
+                // Lấy thông báo lỗi sâu nhất từ Entity Framework (thường chứa chi tiết về khóa ngoại)
+                var realError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                // Kiểm tra nếu lỗi có chứa từ khóa liên quan đến ràng buộc (Constraint)
+                if (realError.Contains("REFERENCE constraint") || realError.Contains("FOREIGN KEY"))
+                {
+                    return BadRequest(new { message = "\"This user cannot be deleted because they have posted an Idea or Comment. Please use the Edit feature and change the Status to 'Inactive' (Account locked)!" });
+                }
+
+                // Các lỗi khác
+                return BadRequest(new { message = "Error when deleting User: " + realError });
             }
         }
     }

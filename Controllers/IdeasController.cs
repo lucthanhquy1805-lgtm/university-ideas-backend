@@ -231,18 +231,45 @@ namespace UniversityIdeas.API.Controllers
 
         // 4. CẬP NHẬT Ý TƯỞNG
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateIdea(int id, [FromBody] CreateIdeaDto dto)
+        public async Task<IActionResult> UpdateIdea(int id, [FromForm] CreateIdeaDto dto) // 🔥 ĐÃ SỬA: [FromBody] thành [FromForm]
         {
-            var idea = await _context.Ideas.FindAsync(id);
-            if (idea == null) return NotFound("Không tìm thấy Ý tưởng!");
+            try
+            {
+                var idea = await _context.Ideas.FindAsync(id);
+                if (idea == null) return NotFound("Không tìm thấy Ý tưởng!");
 
-            idea.Title = dto.Title;
-            idea.Content = dto.Content;
-            idea.CategoryId = dto.CategoryId;
-            idea.TopicId = dto.TopicId;
+                idea.Title = dto.Title;
+                idea.Content = dto.Content;
+                idea.CategoryId = dto.CategoryId;
+                idea.TopicId = dto.TopicId;
+                idea.IsAnonymous = dto.IsAnonymous;
 
-            await _context.SaveChangesAsync();
-            return Ok(idea);
+                // 🔥 BỔ SUNG: Xử lý file nếu người dùng có đính kèm file mới lúc Cập nhật
+                if (dto.File != null && dto.File.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.File.FileName;
+                    string filePathInServer = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePathInServer, FileMode.Create))
+                    {
+                        await dto.File.CopyToAsync(fileStream);
+                    }
+
+                    // Cập nhật đường dẫn file mới vào Database
+                    idea.FilePath = "/uploads/" + uniqueFileName;
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Cập nhật thành công!", idea });
+            }
+            catch (Exception ex)
+            {
+                var realError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return BadRequest("Lỗi khi cập nhật Idea: " + realError);
+            }
         }
 
         // 5. XÓA Ý TƯỞNG

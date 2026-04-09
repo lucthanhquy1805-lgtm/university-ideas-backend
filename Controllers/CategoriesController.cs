@@ -30,7 +30,7 @@ namespace UniversityIdeas.API.Controllers
         {
             try
             {
-                await _categoryRepository.AddCategoryAsync(newCategory);// 
+                await _categoryRepository.AddCategoryAsync(newCategory);
 
                 return Ok(new { message = "Category added successfully!" });
             }

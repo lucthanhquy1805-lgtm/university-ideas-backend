@@ -7,7 +7,7 @@ namespace UniversityIdeas.API.Repositories
     {
         Task<UserPageDto> GetUserPageDataAsync();
         Task CreateUserAsync(User user);
-        Task UpdateUserAsync(User user);
+        Task UpdateUserAsync(int id, UpdateUserDto dto);
         Task DeleteUserAsync(int id);
     }
 }
