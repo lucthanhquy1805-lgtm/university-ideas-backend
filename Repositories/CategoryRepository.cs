@@ -30,7 +30,7 @@ namespace UniversityIdeas.API.Repositories
                     Name = c.Name,
                     Description = c.Description,
                     IdeaCount = _context.Ideas.Count(i => i.CategoryId == c.Id),
-                    IsActive = c.IsActive 
+                    IsActive = c.IsActive
                 })
                 .ToListAsync();
 

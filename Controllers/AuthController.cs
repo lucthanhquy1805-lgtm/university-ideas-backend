@@ -34,7 +34,13 @@ namespace UniversityIdeas.API.Controllers
                 // (Lưu ý: Vì đang code demo nên ta so sánh trực tiếp với cột PasswordHash. Sau này đem chạy thực tế ta sẽ mã hóa mật khẩu sau)
                 if (user == null || user.PasswordHash != dto.Password)
                 {
-                    return Unauthorized(new { message = "Email hoặc mật khẩu không chính xác!" }); // Lỗi 401
+                    return Unauthorized(new { message = "Incorrect email or password!" }); // Lỗi 401
+                }
+
+                
+                if (user.IsActive == false)
+                {
+                    return Unauthorized(new { message = "Your account has been locked. Please contact the Admin!" });
                 }
 
                 // Nếu đúng, cấp "Thẻ từ" (Trả về thông tin User nhưng GIẤU password đi)
@@ -49,7 +55,7 @@ namespace UniversityIdeas.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi server: " + ex.Message);
+                return BadRequest("Server error: " + ex.Message);
             }
         }
         // =========================================================
@@ -75,7 +81,7 @@ namespace UniversityIdeas.API.Controllers
                 var emailExists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
                 if (emailExists)
                 {
-                    return BadRequest("Email này đã được sử dụng trong hệ thống!");
+                    return BadRequest("This email address is already in use!");
                 }
 
                 // Bước B: Tạo tài khoản mới
@@ -96,11 +102,11 @@ namespace UniversityIdeas.API.Controllers
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Đăng ký tài khoản thành công!" });
+                return Ok(new { message = "Account registration successful" });
             }
             catch (Exception ex)
             {
-                return BadRequest("Lỗi server: " + ex.Message);
+                return BadRequest("Server error: " + ex.Message);
             }
         }
     }

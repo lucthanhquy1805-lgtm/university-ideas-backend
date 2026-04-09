@@ -48,10 +48,33 @@ namespace UniversityIdeas.API.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(int id, UpdateUserDto dto)
         {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            // 1. Tìm User cũ dưới Database lên
+            var existingUser = await _context.Users.FindAsync(id);
+
+            if (existingUser != null)
+            {
+                // 2. Ghi đè các thông tin cơ bản
+                existingUser.FullName = dto.FullName;
+                existingUser.Email = dto.Email;
+                existingUser.DepartmentId = dto.DepartmentId;
+                existingUser.RoleId = dto.RoleId;
+                existingUser.IsActive = dto.IsActive;
+
+                // 3. LOGIC MẤU CHỐT: Chỉ cập nhật mật khẩu nếu có gõ pass mới
+                if (!string.IsNullOrWhiteSpace(dto.PasswordHash))
+                {
+                    existingUser.PasswordHash = dto.PasswordHash;
+                }
+
+                // 4. Lưu lại (Lưu ý: Không cần dùng _context.Users.Update() nữa vì FindAsync đã giúp EF Core tự động theo dõi existingUser rồi)
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Không tìm thấy người dùng này trong cơ sở dữ liệu!");
+            }
         }
 
         public async Task DeleteUserAsync(int id)
